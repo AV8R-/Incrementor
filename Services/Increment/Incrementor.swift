@@ -58,6 +58,11 @@ public struct Incrementor: Incrementing {
         value += step
     }
     
+    /// Сбрасывает текущее значение до нуля
+    public mutating func reset() {
+        value = 0
+    }
+    
     /**
      * Устанавливает максимальное значение текущего числа.
      *

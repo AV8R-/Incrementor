@@ -13,6 +13,7 @@ enum ConfigError: Error {
     case failedToWrite
     case failedToRead
     case filedToDeserialize
+    case validationFail(property: String, reason: String)
 }
 
 /// Конфигурация приложения.

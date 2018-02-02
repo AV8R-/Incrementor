@@ -7,3 +7,13 @@
 //
 
 import Foundation
+import RxCocoa
+import RxSwift
+
+public protocol ConfigViewModelling {
+    var step: BehaviorRelay<Int> { get }
+    var max: BehaviorRelay<Int> { get }
+    
+    func set(step: Int)
+    func set(max: Int)
+}

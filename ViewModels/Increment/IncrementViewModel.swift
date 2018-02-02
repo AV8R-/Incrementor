@@ -8,25 +8,32 @@
 
 import Foundation
 import Services
-import RxSwift
+import RxCocoa
 
 public final class IncrementViewModel: IncrementViewModelling {
-    public var value: Variable<Int>
+    public var value: BehaviorRelay<Int>
     
     private var incrementor: Incrementing
     
-    init(incrementor: Incrementing) {
+    public init(incrementor: Incrementing) {
         self.incrementor = incrementor
-        value = Variable(incrementor.value)
+        value = BehaviorRelay(value: incrementor.value)
     }
     
+    /// Увеличивает значение, обновляет `Relay` значением из модели
     public func increment() {
         incrementor.increment()
         update()
     }
     
+    /// Сбрасывает текущее значение до нуля
+    public func reset() {
+        incrementor.reset()
+        update()
+    }
+    
     private func update() {
-        value.value = incrementor.value
+        value.accept(incrementor.value)
     }
     
     

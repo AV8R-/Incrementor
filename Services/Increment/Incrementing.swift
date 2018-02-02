@@ -21,4 +21,6 @@ public protocol Incrementing {
     mutating func increment()
     /// Устанавливает максимальное значение текущего числа.
     mutating func set(maximum: Int) throws
+    /// Сбрасывает текущее значение до нуля
+    mutating func reset()
 }

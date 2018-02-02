@@ -8,6 +8,6 @@
 
 import Foundation
 
-public protocol MenuViewControllering {
-    var controller: UIViewController { get }
+public protocol MenuViewControllering: ViewControlling {
+    init(incrementor: @escaping () -> IncrementViewControlling, config: @escaping () -> ConfigViewControlling)
 }

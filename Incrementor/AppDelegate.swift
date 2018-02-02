@@ -7,14 +7,79 @@
 //
 
 import UIKit
+import Swinject
+import Services
+import Views
+import ViewModels
+
+enum InjectionError: Error {
+    case noRegisteredServices(for: Any.Type)
+}
+
+extension Resolver {
+    func resolve<T>() throws -> T {
+        guard let service = resolve(T.self) else {
+            throw InjectionError.noRegisteredServices(for: T.self)
+        }
+        return service
+    }
+}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    let container = Container { container in
+        // Models
+        container.register(Storing.self) { _ in DiskStorage() }
+        container.register(Config.self) { _ in
+            return StoredConfig.stored ?? StoredConfig.default
+        }
+        container.register(Incrementing.self) { resolver in
+            return try! Incrementor(config: resolver.resolve(), storage: resolver.resolve())
+            
+        }
+        
+        // View Models
+        container.register(IncrementViewModelling.self) { resolver in
+            return IncrementViewModel(incrementor: try! resolver.resolve())
+        }
+        
+        container.register(ConfigViewModelling.self) { resolver in
+            return ConfigViewModel(config: try! resolver.resolve())
+            
+        }
+        
+        // Views
+        container.register(MenuViewControllering.self) { resolver in
+            return MenuViewController(
+                incrementor: { try! resolver.resolve()},
+                config: { try! resolver.resolve()}
+            )
+        }
+        
+        container.register(ConfigViewControlling.self) { resolver in
+            return ConfigViewController(viewModel: try! resolver.resolve(), style: .grouped)
+        }
+        
+        container.register(IncrementViewControlling.self) { resolver in
+            return IncrementViewController(viewModel: try! resolver.resolve())
+        }
 
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        let rootViewController = UINavigationController()
+        rootViewController.viewControllers = [container.resolve(MenuViewControllering.self)!.controller]
+        rootViewController.isNavigationBarHidden = false
+        rootViewController.navigationBar.prefersLargeTitles = true
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window!.backgroundColor = .white
+        window!.rootViewController = rootViewController
+        window!.makeKeyAndVisible()
+        
         // Override point for customization after application launch.
         return true
     }

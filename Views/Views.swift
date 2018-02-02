@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+class Views {
+    static let bundle = Bundle(for: Views.self)
+}

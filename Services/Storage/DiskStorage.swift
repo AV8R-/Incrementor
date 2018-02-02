@@ -10,12 +10,23 @@ import Foundation
 
 /**
  Стандартное дисковое хранилище.
- Может сохранить любое 
+ Может сохранить на диск любую примитивную переменную
  */
 public final class DiskStorage: Storing, Storable {
     
     public init() {}
     
+    /**
+     Сохраняет указанное примитивное значение.
+     
+     - Parameters:
+         - value: значение любого из примитивных типов. При попытке передать
+             не примитивное значение может произойти крэш
+         - path: путь по которому нужно сохранить переменную
+     
+     - Throws:
+     Исклчючения типа StorageError
+     */
     public func store<T>(_ value: T, path: [String]) throws {
         let filename = path.joined(separator: "_")
         let data = NSKeyedArchiver.archivedData(withRootObject: value)
@@ -29,6 +40,14 @@ public final class DiskStorage: Storing, Storable {
 
     }
     
+    /**
+     Извлекает значение из памяти по указанному пути
+     
+     - Parameter path: путь по которому нужно извлечь переменную
+     
+     - Throws:
+     Исклчючения типа StorageError
+     */
     public func get<T>(path: [String]) throws -> T {
         let filename = path.joined(separator: "_")
         let filePath = fullPath(file: filename)

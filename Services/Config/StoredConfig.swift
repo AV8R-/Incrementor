@@ -8,6 +8,10 @@
 
 import Foundation
 
+/**
+ Конфигурация, сохраняющаяся на диске
+ Может сохранить только один экземпляр конфига
+ */
 public struct StoredConfig: Config, Codable, Storable {
     private static let filename = "Config"
     private var filePath: URL { return StoredConfig.fullPath(file: StoredConfig.filename) }
@@ -15,7 +19,15 @@ public struct StoredConfig: Config, Codable, Storable {
         case step, max
     }
     
+    /**
+      Шаг инкремента
+      Валидны только значения больше 0. По умолчанию 1.
+     */
     public var step: Int
+    /**
+      Максимальное значение в инкременте
+      Валидны только значения больше 0. По умолчанию `Int.max`
+     */
     public var max: Int
     
     private init() {
@@ -23,15 +35,32 @@ public struct StoredConfig: Config, Codable, Storable {
         max = Int.max
     }
     
+    // Конфиг со значениями по умолчанию
     public static let `default`: Config = StoredConfig()
+    // Конфиг записаный на диск
     public static var stored: Config? {
         return try? parseConfig()
     }
     
+    /**
+     Сохраняет текущий конфиг на диск
+     
+     - throws:
+     Исключения типа `ConfigError`
+     При попытке сохранить конфиг с не валидными значениями выбросит исключение
+     `ConfigError.validationFail`
+     */
     public func save() throws {
+        try validate()
         try storeConfig()
     }
     
+    /**
+     Прочесть конфиг с диска
+     
+     - throws:
+     Исключения типа `ConfigError`
+     */
     public static func assertStored() throws -> Config {
         return try parseConfig()
     }
@@ -50,6 +79,16 @@ public struct StoredConfig: Config, Codable, Storable {
             try data.write(to: url)
         } catch {
             throw ConfigError.failedToWrite
+        }
+    }
+    
+    private func validate() throws {
+        guard step > 0 else {
+            throw ConfigError.validationFail(property: "step", reason: "must be > 0")
+        }
+        
+        guard max > 0 else {
+            throw ConfigError.validationFail(property: "max", reason: "must be > 0")
         }
     }
     

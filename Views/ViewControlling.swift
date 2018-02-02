@@ -6,4 +6,14 @@
 //  Copyright © 2018 BManshilin. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+public protocol ViewControlling {
+    var controller: UIViewController { get }
+}
+
+extension ViewControlling where Self: UIViewController {
+    public var controller: UIViewController {
+        return self
+    }
+}

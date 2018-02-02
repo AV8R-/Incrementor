@@ -7,9 +7,10 @@
 //
 
 import Foundation
-import RxSwift
+import RxCocoa
 
 public protocol IncrementViewModelling {
-    var value: Variable<Int> { get }
+    var value: BehaviorRelay<Int> { get }
     func increment()
+    func reset()
 }
