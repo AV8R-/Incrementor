@@ -1,0 +1,9 @@
+[submodule "Dependencies/Swinject"]
+	path = Dependencies/Swinject
+	url = git@github.com:Swinject/Swinject.git
+[submodule "Dependencies/RxSwift"]
+	path = Dependencies/RxSwift
+	url = git@github.com:ReactiveX/RxSwift.git
+[submodule "Dependencies/Quick"]
+	path = Dependencies/Quick
+	url = git@github.com:Quick/Quick.git
