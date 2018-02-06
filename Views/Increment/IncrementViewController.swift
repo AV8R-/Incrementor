@@ -8,6 +8,7 @@
 
 import UIKit
 import ViewModels
+import RxSwift
 
 public final class IncrementViewController: UIViewController, IncrementViewControlling {
     
@@ -21,42 +22,45 @@ public final class IncrementViewController: UIViewController, IncrementViewContr
     }
     
     private var viewModel: IncrementViewModelling
-    weak var button: UIButton!
+    private let disposeBag = DisposeBag()
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         title = "Incrementor"
         view.backgroundColor = .white
         
+        let inc = makeIncrementControl()
+        view.addSubview(inc)
+        
+        NSLayoutConstraint.activate([
+            inc.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            inc.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+        
+        navigationItem.rightBarButtonItem = makeResetButton()
+    }
+    
+}
+
+extension IncrementViewController {
+    private func makeIncrementControl() -> UIControl {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("0", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 100, weight: .medium)
         button.setTitleColor(.black, for: .normal)
-        view.addSubview(button)
-        self.button = button
-        button.addTarget(self, action: #selector(increment), for: .touchUpInside)
+        viewModel.value
+            .map { String($0) }
+            .bind(to: button.rx.title())
+            .disposed(by: disposeBag)
+        viewModel.increment = button.rx.tap
         
-        NSLayoutConstraint.activate([
-            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
-        
-        _=viewModel.value.bind(onNext: { [weak self] value in
-            self?.button.setTitle("\(value)", for: .normal)
-        })
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .done, target: self, action: #selector(reset))
+        return button
     }
     
-    @objc
-    func increment() {
-        viewModel.increment()
+    private func makeResetButton() -> UIBarButtonItem {
+        let button = UIBarButtonItem(title: "Reset", style: .done, target: nil, action: nil)
+        viewModel.reset = button.rx.tap
+        return button
     }
-    
-    @objc
-    func reset() {
-        viewModel.reset()
-    }
-    
 }

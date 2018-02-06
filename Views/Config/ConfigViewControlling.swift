@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// View для экрана конфигурации
 public protocol ConfigViewControlling: ViewControlling {
     
 }

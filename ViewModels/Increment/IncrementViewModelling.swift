@@ -10,7 +10,10 @@ import Foundation
 import RxCocoa
 
 public protocol IncrementViewModelling {
+    ///Текущее значение в инкременторе
     var value: BehaviorRelay<Int> { get }
-    func increment()
-    func reset()
+    /// Событие увеличения значение в инкременторе
+    var increment: ControlEvent<()>? { set get }
+    /// Событие сброса значения в инкременторе до стартового
+    var reset: ControlEvent<()>? { set get }
 }

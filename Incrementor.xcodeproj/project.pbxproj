@@ -68,6 +68,10 @@
 		30BA28832022A8A600F78E68 /* DiskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BA28822022A8A600F78E68 /* DiskStorage.swift */; };
 		30BA28852022AB5C00F78E68 /* ServicesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BA28842022AB5C00F78E68 /* ServicesTests.swift */; };
 		30BA2887202335C300F78E68 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BA2886202335C300F78E68 /* Config.swift */; };
+		30C4FEA62027EC2400DAD67E /* MenuAssambley.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C4FEA52027EC2400DAD67E /* MenuAssambley.swift */; };
+		30C4FEA82027EC2E00DAD67E /* IncrementAssembley.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C4FEA72027EC2E00DAD67E /* IncrementAssembley.swift */; };
+		30C4FEAA2027EC3800DAD67E /* ConfigurationAssambley.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C4FEA92027EC3800DAD67E /* ConfigurationAssambley.swift */; };
+		30C4FEAC2027F1B900DAD67E /* ServicesAssembley.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C4FEAB2027F1B900DAD67E /* ServicesAssembley.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -576,6 +580,10 @@
 		30BA28822022A8A600F78E68 /* DiskStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskStorage.swift; sourceTree = "<group>"; };
 		30BA28842022AB5C00F78E68 /* ServicesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesTests.swift; sourceTree = "<group>"; };
 		30BA2886202335C300F78E68 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		30C4FEA52027EC2400DAD67E /* MenuAssambley.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuAssambley.swift; sourceTree = "<group>"; };
+		30C4FEA72027EC2E00DAD67E /* IncrementAssembley.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncrementAssembley.swift; sourceTree = "<group>"; };
+		30C4FEA92027EC3800DAD67E /* ConfigurationAssambley.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationAssambley.swift; sourceTree = "<group>"; };
+		30C4FEAB2027F1B900DAD67E /* ServicesAssembley.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesAssembley.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -915,6 +923,7 @@
 		30BA281F202297E500F78E68 /* Incrementor */ = {
 			isa = PBXGroup;
 			children = (
+				30C4FE792027EC0300DAD67E /* Assemblies */,
 				30BA2820202297E500F78E68 /* AppDelegate.swift */,
 				30BA2827202297E500F78E68 /* Assets.xcassets */,
 				30BA2829202297E500F78E68 /* LaunchScreen.storyboard */,
@@ -983,6 +992,17 @@
 				30BA2886202335C300F78E68 /* Config.swift */,
 			);
 			path = Config;
+			sourceTree = "<group>";
+		};
+		30C4FE792027EC0300DAD67E /* Assemblies */ = {
+			isa = PBXGroup;
+			children = (
+				30C4FEA52027EC2400DAD67E /* MenuAssambley.swift */,
+				30C4FEA72027EC2E00DAD67E /* IncrementAssembley.swift */,
+				30C4FEA92027EC3800DAD67E /* ConfigurationAssambley.swift */,
+				30C4FEAB2027F1B900DAD67E /* ServicesAssembley.swift */,
+			);
+			path = Assemblies;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1703,6 +1723,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30C4FEAC2027F1B900DAD67E /* ServicesAssembley.swift in Sources */,
+				30C4FEAA2027EC3800DAD67E /* ConfigurationAssambley.swift in Sources */,
+				30C4FEA82027EC2E00DAD67E /* IncrementAssembley.swift in Sources */,
+				30C4FEA62027EC2400DAD67E /* MenuAssambley.swift in Sources */,
 				30BA2821202297E500F78E68 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

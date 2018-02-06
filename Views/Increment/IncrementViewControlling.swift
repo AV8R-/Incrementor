@@ -8,5 +8,6 @@
 
 import Foundation
 
+/// View для экрана инкремента
 public protocol IncrementViewControlling: ViewControlling {
 }

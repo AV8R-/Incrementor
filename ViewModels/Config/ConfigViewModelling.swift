@@ -10,10 +10,16 @@ import Foundation
 import RxCocoa
 import RxSwift
 
+///ViewModel экрана настроек
 public protocol ConfigViewModelling {
+    /// Relay шага инкремента.
+    ///
+    /// Это значение соответсвоовует значению, на которое увеличивается
+    /// значение в `Incrementor` каждый шаг.
     var step: BehaviorRelay<Int> { get }
-    var max: BehaviorRelay<Int> { get }
     
-    func set(step: Int)
-    func set(max: Int)
+    /// Relay максимального значения в инкременторе.
+    ///
+    /// Это значение соответсвоовует максимальному значению в `Incrementor`.
+    var max: BehaviorRelay<Int> { get }
 }

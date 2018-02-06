@@ -8,6 +8,8 @@
 
 import Foundation
 import ViewModels
+import RxCocoa
+import RxSwift
 
 public final class ConfigViewController: UITableViewController, ConfigViewControlling {
     
@@ -15,22 +17,8 @@ public final class ConfigViewController: UITableViewController, ConfigViewContro
         static let cell = "cell"
     }
     
-    private weak var stepTextField: UITextField! {
-        didSet {
-            stepTextField.text = "\(viewModel.step.value)"
-            _=viewModel.step.bind(onNext: { [weak self] new in
-                self?.stepTextField.text = "\(new)"
-            })
-        }
-    }
-    private weak var maxTextField: UITextField! {
-        didSet {
-            maxTextField.text = "\(viewModel.max.value)"
-            _=viewModel.max.bind(onNext: { [weak self] new in
-                self?.maxTextField.text = "\(new)"
-            })
-        }
-    }
+    private let disposeBag = DisposeBag()
+    
     private var viewModel: ConfigViewModelling
     public init(viewModel: ConfigViewModelling, style: UITableViewStyle) {
         self.viewModel = viewModel
@@ -77,25 +65,21 @@ public final class ConfigViewController: UITableViewController, ConfigViewContro
             textField.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
         ])
         
-        textField.addTarget(self, action: #selector(valueChanged(_:)), for: .editingChanged)
-        
         switch indexPath.section {
-        case 0: stepTextField = textField
-        case 1: maxTextField = textField
+        case 0: bind(textField: textField, to: viewModel.step)
+        case 1: bind(textField: textField, to: viewModel.max)
         default: ()
         }
-        
+
         return cell
     }
     
-    @objc
-    public func valueChanged(_ sender: UITextField) {
-        let value = Int(sender.text ?? "") ?? 0
-        if sender === stepTextField {
-            viewModel.set(step: value)
-        } else if sender === maxTextField {
-            viewModel.set(max: value)
-        }
+    private func bind(textField: UITextField, to: BehaviorRelay<Int>) {
+        textField.text = "\(to.value)"
+        textField.rx.text
+            .map {(Int($0 ?? "") ?? 0)}
+            .bind(to: to)
+            .disposed(by: disposeBag)
+
     }
-    
 }

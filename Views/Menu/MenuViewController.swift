@@ -9,7 +9,7 @@
 import UIKit
 
 public final class MenuViewController: UITableViewController, MenuViewControllering {    
-    enum Constants {
+    private enum Constants {
         static let cellIdentifier = "cell"
     }
     

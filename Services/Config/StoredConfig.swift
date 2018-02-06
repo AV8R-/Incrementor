@@ -12,12 +12,16 @@ import Foundation
  Конфигурация, сохраняющаяся на диске
  Может сохранить только один экземпляр конфига
  */
-public struct StoredConfig: Config, Codable, Storable {
+public struct StoredConfig: Config, Storable {
     private static let filename = "Config"
     private var filePath: URL { return StoredConfig.fullPath(file: StoredConfig.filename) }
-    private enum CodingKeys: String, CodingKey {
-        case step, max
+
+    private enum Constants {
+        static let stepKey = ["config", "step"]
+        static let maxKey = ["config", "max"]
     }
+    
+    private let store: Storing
     
     /**
       Шаг инкремента
@@ -30,16 +34,22 @@ public struct StoredConfig: Config, Codable, Storable {
      */
     public var max: Int
     
-    private init() {
+    private init(store: Storing) {
+        self.store = store
         step = 1
         max = Int.max
     }
     
     // Конфиг со значениями по умолчанию
-    public static let `default`: Config = StoredConfig()
-    // Конфиг записаный на диск
-    public static var stored: Config? {
-        return try? parseConfig()
+    public static func `default`(store: Storing) -> Config {
+        return StoredConfig(store: store)
+    }
+    
+    /// Инициализировтаь конфиг со значениями из хранилища.
+    public static func stored(store: Storing) throws -> Config {
+        var config = StoredConfig(store: store)
+        try config.parseConfig()
+        return config
     }
     
     /**
@@ -55,31 +65,9 @@ public struct StoredConfig: Config, Codable, Storable {
         try storeConfig()
     }
     
-    /**
-     Прочесть конфиг с диска
-     
-     - throws:
-     Исключения типа `ConfigError`
-     */
-    public static func assertStored() throws -> Config {
-        return try parseConfig()
-    }
-    
     private func storeConfig() throws {
-        let url = fullPath(file: StoredConfig.filename)
-        let encoder = PropertyListEncoder()
-        let data: Data
-        do {
-            data = try encoder.encode(self)
-        } catch {
-            throw ConfigError.failedToSerialize
-        }
-        
-        do {
-            try data.write(to: url)
-        } catch {
-            throw ConfigError.failedToWrite
-        }
+        try store.store(step, path: Constants.stepKey)
+        try store.store(max, path: Constants.maxKey)
     }
     
     private func validate() throws {
@@ -92,22 +80,8 @@ public struct StoredConfig: Config, Codable, Storable {
         }
     }
     
-    private static func parseConfig() throws -> StoredConfig {
-        let url = fullPath(file: StoredConfig.filename)
-        let decoder = PropertyListDecoder()
-        let data: Data
-        do {
-            data = try Data(contentsOf: url)
-        } catch {
-            throw ConfigError.failedToRead
-        }
-        
-        let config: StoredConfig
-        do {
-            config = try decoder.decode(StoredConfig.self, from: data)
-        } catch {
-            throw ConfigError.filedToDeserialize
-        }
-        return config
+    private mutating func parseConfig() throws {
+        max = try store.get(path: Constants.maxKey)
+        step = try store.get(path: Constants.stepKey)
     }
 }

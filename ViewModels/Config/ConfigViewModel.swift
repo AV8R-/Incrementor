@@ -11,46 +11,36 @@ import RxCocoa
 import RxSwift
 import Services
 
-/// `ViewModel` для экрана конфигурации
+/// `ViewModel` для экрана конфигурации без валидации значений.
+/// Ошибки сохранения конфига умалчиваются
 public final class ConfigViewModel: ConfigViewModelling {
     public var step: BehaviorRelay<Int>
     public var max: BehaviorRelay<Int>
     
     internal var config: Config
+    private let disposeBag = DisposeBag()
     
     public init(config: Config) {
         self.config = config
         step = BehaviorRelay(value: config.step)
         max = BehaviorRelay(value: config.max)
-    }
-    
-    /// Устанавливает значение шага. Сохраняет конфиг. Отсылает в `Relay`
-    /// новое значение. При ошибке сохранения конфига отсылает в `Relay`
-    /// шага предыдущее значение
-    public func set(step: Int) {
-        let old = config.step
-        config.step = step
-        do {
-            try config.save()
-        } catch {
-            self.step.accept(old)
-            return
+        
+        step.subscribe { [weak self] event in
+            guard let value = event.element else {
+                return
+            }
+            self?.config.step = value
+            try? self?.config.save()
         }
-        self.step.accept(step)
-    }
-    
-    /// Устанавливает значение максимума. Сохраняет конфиг. Отсылает в
-    /// `Relay` новое значение. При ошибке сохранения конфига отсылает в
-    /// `Relay` максимума предыдущее значение
-    public func set(max: Int) {
-        let old = config.max
-        config.max = max
-        do {
-            try config.save()
-        } catch {
-            self.max.accept(old)
-            return
-        }
-        self.max.accept(max)
+        .disposed(by: disposeBag)
+        
+        max.subscribe { [weak self] event in
+            guard let value = event.element else {
+                return
+            }
+            self?.config.max = value
+            try? self?.config.save()
+            }
+            .disposed(by: disposeBag)
     }
 }

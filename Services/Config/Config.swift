@@ -35,10 +35,7 @@ public protocol Config {
     func save() throws
     
     /// Конфигурация со значениями по умолчанию
-    static var `default`: Config { get }
-    /// Текущая конфигурация
-    static var stored: Config? { get }
-    
-    /// Загружает текущую конфигурацию. При ошибке бросает исключения типа `ConfigError`
-    static func assertStored() throws -> Config
+    static func `default`(store: Storing) -> Config
+    /// Текущая сохраненная конфигурация
+    static func stored(store: Storing) throws -> Config
 }

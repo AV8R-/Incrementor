@@ -9,27 +9,35 @@
 import Foundation
 import Services
 import RxCocoa
+import RxSwift
 
 public final class IncrementViewModel: IncrementViewModelling {
     public var value: BehaviorRelay<Int>
+    public var increment: ControlEvent<()>? {
+        didSet {
+            increment?.bind { [weak self] _ in
+                self?.incrementor.increment()
+                self?.update()
+            }
+            .disposed(by: disposeBag)
+        }
+    }
+    public var reset: ControlEvent<()>? {
+        didSet {
+            reset?.bind { [weak self] _ in
+                self?.incrementor.reset()
+                self?.update()
+            }
+            .disposed(by: disposeBag)
+        }
+    }
     
     private var incrementor: Incrementing
+    private var disposeBag = DisposeBag()
     
     public init(incrementor: Incrementing) {
         self.incrementor = incrementor
         value = BehaviorRelay(value: incrementor.value)
-    }
-    
-    /// Увеличивает значение, обновляет `Relay` значением из модели
-    public func increment() {
-        incrementor.increment()
-        update()
-    }
-    
-    /// Сбрасывает текущее значение до нуля
-    public func reset() {
-        incrementor.reset()
-        update()
     }
     
     private func update() {

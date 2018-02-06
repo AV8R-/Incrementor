@@ -8,6 +8,15 @@
 
 import Foundation
 
+/// View для экрана меню
 public protocol MenuViewControllering: ViewControlling {
-    init(incrementor: @escaping () -> IncrementViewControlling, config: @escaping () -> ConfigViewControlling)
+    /// Конструктор
+    ///
+    /// - Parameters:
+    ///   - incrementor: Фабрика для создания экрана инкремента
+    ///   - config: Фабрика для создания экрана конфигурации
+    init(
+        incrementor: @escaping () -> IncrementViewControlling,
+        config: @escaping () -> ConfigViewControlling
+    )
 }

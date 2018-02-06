@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Общий протокол для View, которые являются наследниками UIViewController
 public protocol ViewControlling {
     var controller: UIViewController { get }
 }

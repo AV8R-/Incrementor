@@ -30,48 +30,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    let container = Container { container in
-        // Models
-        container.register(Storing.self) { _ in DiskStorage() }
-        container.register(Config.self) { _ in
-            return StoredConfig.stored ?? StoredConfig.default
-        }
-        container.register(Incrementing.self) { resolver in
-            return try! Incrementor(config: resolver.resolve(), storage: resolver.resolve())
-            
-        }
-        
-        // View Models
-        container.register(IncrementViewModelling.self) { resolver in
-            return IncrementViewModel(incrementor: try! resolver.resolve())
-        }
-        
-        container.register(ConfigViewModelling.self) { resolver in
-            return ConfigViewModel(config: try! resolver.resolve())
-            
-        }
-        
-        // Views
-        container.register(MenuViewControllering.self) { resolver in
-            return MenuViewController(
-                incrementor: { try! resolver.resolve()},
-                config: { try! resolver.resolve()}
-            )
-        }
-        
-        container.register(ConfigViewControlling.self) { resolver in
-            return ConfigViewController(viewModel: try! resolver.resolve(), style: .grouped)
-        }
-        
-        container.register(IncrementViewControlling.self) { resolver in
-            return IncrementViewController(viewModel: try! resolver.resolve())
-        }
+    lazy private var assembler = makeAssembler()
 
-    }
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?
+        ) -> Bool
+    {
+        let r = assembler.resolver
         let rootViewController = UINavigationController()
-        rootViewController.viewControllers = [container.resolve(MenuViewControllering.self)!.controller]
+        rootViewController.viewControllers = [r.resolve(MenuViewControllering.self)!.controller]
         rootViewController.isNavigationBarHidden = false
         rootViewController.navigationBar.prefersLargeTitles = true
         
@@ -105,7 +73,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+}
 
-
+extension AppDelegate {
+    func makeAssembler() -> Assembler {
+        return Assembler([
+            ServicesAssembley(),
+            MenuAssembley(),
+            IncrementAssembley(),
+            ConfigurationAssembley(),
+        ])
+    }
 }
 
