@@ -31,12 +31,13 @@ final class ConfigViewModelSpec: QuickSpec {
             }
         }
         
-        static var `default`: Config = MockConfig()
-        static var stored: Config? = MockConfig()
-        static func assertStored() throws -> Config {
+        static func `default`(store: Storing) -> Config {
             return MockConfig()
         }
         
+        static func stored(store: Storing) throws -> Config {
+            return MockConfig()
+        }
     }
     
     override func spec() {
@@ -49,22 +50,21 @@ final class ConfigViewModelSpec: QuickSpec {
                 config.step = 1
             }
             it("changes config value") {
-                viewModel.set(step: 5)
+                viewModel.step.accept(5)
                 expect(config.step).to(equal(5))
             }
             it("calls save on config") {
                 let prevCalls = config.saveCalls
-                viewModel.set(step: 10)
+                viewModel.step.accept(10)
                 expect(config.saveCalls).to(equal(prevCalls+1))
             }
             it("updates relay") {
-                viewModel.set(step: 15)
+                viewModel.step.accept(15)
                 expect(viewModel.step.value).to(equal(15))
             }
-            it("updates relay with old value o fail") {
+            it("updates relay with old value on fail") {
                 let old = config.step
-                viewModel.step.accept(20)
-                viewModel.set(step: -10)
+                viewModel.step.accept(-15)
                 expect(viewModel.step.value).to(equal(old))
             }
         }
@@ -75,22 +75,21 @@ final class ConfigViewModelSpec: QuickSpec {
                 config.step = 1
             }
             it("changes config value") {
-                viewModel.set(max: 5)
+                viewModel.max.accept(5)
                 expect(config.max).to(equal(5))
             }
             it("calls save on config") {
                 let prevCalls = config.saveCalls
-                viewModel.set(max: 10)
+                viewModel.max.accept(10)
                 expect(config.saveCalls).to(equal(prevCalls+1))
             }
             it("updates relay") {
-                viewModel.set(max: 15)
+                viewModel.max.accept(15)
                 expect(viewModel.max.value).to(equal(15))
             }
-            it("updates relay with old value o fail") {
+            it("updates relay with old value on fail") {
                 let old = config.max
-                viewModel.max.accept(20)
-                viewModel.set(max: -10)
+                viewModel.max.accept(-10)
                 expect(viewModel.max.value).to(equal(old))
             }
         }

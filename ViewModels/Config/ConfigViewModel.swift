@@ -26,16 +26,19 @@ public final class ConfigViewModel: ConfigViewModelling {
         max = BehaviorRelay(value: config.max)
         
         step.subscribe { [weak self] event in
-            guard let value = event.element else {
+            guard let value = event.element, value > 0 else {
+                self?.step.accept(self!.config.step)
                 return
             }
+            
             self?.config.step = value
             try? self?.config.save()
         }
         .disposed(by: disposeBag)
         
         max.subscribe { [weak self] event in
-            guard let value = event.element else {
+            guard let value = event.element, value > 0 else {
+                self?.max.accept(self!.config.max)
                 return
             }
             self?.config.max = value

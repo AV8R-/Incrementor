@@ -72,6 +72,7 @@
 		30C4FEA82027EC2E00DAD67E /* IncrementAssembley.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C4FEA72027EC2E00DAD67E /* IncrementAssembley.swift */; };
 		30C4FEAA2027EC3800DAD67E /* ConfigurationAssambley.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C4FEA92027EC3800DAD67E /* ConfigurationAssambley.swift */; };
 		30C4FEAC2027F1B900DAD67E /* ServicesAssembley.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C4FEAB2027F1B900DAD67E /* ServicesAssembley.swift */; };
+		30EF336F202A7AC4004783AC /* ConfigViewControllerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30EF336E202A7AC4004783AC /* ConfigViewControllerSpec.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -584,6 +585,7 @@
 		30C4FEA72027EC2E00DAD67E /* IncrementAssembley.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncrementAssembley.swift; sourceTree = "<group>"; };
 		30C4FEA92027EC3800DAD67E /* ConfigurationAssambley.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationAssambley.swift; sourceTree = "<group>"; };
 		30C4FEAB2027F1B900DAD67E /* ServicesAssembley.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesAssembley.swift; sourceTree = "<group>"; };
+		30EF336E202A7AC4004783AC /* ConfigViewControllerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigViewControllerSpec.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -739,6 +741,7 @@
 			children = (
 				302B3ED62023B94300D50F9A /* Info.plist */,
 				302B4B99202421C100D50F9A /* IncrementViewControllerSpec.swift */,
+				30EF336E202A7AC4004783AC /* ConfigViewControllerSpec.swift */,
 			);
 			path = ViewsTests;
 			sourceTree = "<group>";
@@ -1716,6 +1719,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				302B4B9A202421C100D50F9A /* IncrementViewControllerSpec.swift in Sources */,
+				30EF336F202A7AC4004783AC /* ConfigViewControllerSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

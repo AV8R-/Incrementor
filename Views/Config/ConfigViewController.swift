@@ -66,8 +66,12 @@ public final class ConfigViewController: UITableViewController, ConfigViewContro
         ])
         
         switch indexPath.section {
-        case 0: bind(textField: textField, to: viewModel.step)
-        case 1: bind(textField: textField, to: viewModel.max)
+        case 0:
+            bind(textField: textField, to: viewModel.step)
+            stepTextField = textField
+        case 1:
+            bind(textField: textField, to: viewModel.max)
+            maxTextField = textField
         default: ()
         }
 
@@ -82,4 +86,8 @@ public final class ConfigViewController: UITableViewController, ConfigViewContro
             .disposed(by: disposeBag)
 
     }
+    
+    // UI tests необходимости
+    weak var stepTextField: UITextField!
+    weak var maxTextField: UITextField!
 }

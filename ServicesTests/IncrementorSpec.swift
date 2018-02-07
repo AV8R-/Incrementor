@@ -52,10 +52,11 @@ struct MockConfig: Config {
     func save() throws {
     }
     
-    static var `default`: Config { return MockConfig(step: 1, max: .max) }
-    static var stored: Config? { return MockConfig(step: 5, max: 10) }
+    static func `default`(store: Storing) -> Config {
+        return MockConfig(step: 1, max: .max)
+    }
     
-    static func assertStored() throws -> Config {
+    static func stored(store: Storing) throws -> Config {
         return MockConfig(step: 5, max: 10)
     }
 }

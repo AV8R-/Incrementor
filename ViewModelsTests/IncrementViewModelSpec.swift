@@ -9,7 +9,9 @@
 import Quick
 import Nimble
 import Services
+import RxSwift
 import RxCocoa
+import UIKit
 @testable import ViewModels
 
 final class IncrementViewModelSpec: QuickSpec {
@@ -18,6 +20,7 @@ final class IncrementViewModelSpec: QuickSpec {
         var value: Int = 0
         
         var incrementCalls = 0
+        var resetCalls = 0
         
         func increment() {
             incrementCalls += 1
@@ -26,20 +29,42 @@ final class IncrementViewModelSpec: QuickSpec {
         
         func set(maximum: Int) throws {
         }
+        
+        func reset() {
+            value = 0
+            resetCalls += 1
+        }
     }
     
     override func spec() {
         let incrementor = MockIncrementor()
         let viewModel = IncrementViewModel(incrementor: incrementor)
         describe("increment") {
-            it("calls increment on model") {
+            it("calls increment on the model layer") {
                 let prevCalls = incrementor.incrementCalls
-                viewModel.increment()
+                let taps = Observable.just(())
+                viewModel.increment = ControlEvent(events: taps)
                 expect(incrementor.incrementCalls).to(equal(prevCalls+1))
             }
             
             it("updates relay with model value") {
-                viewModel.increment()
+                let taps = Observable.just(())
+                viewModel.increment = ControlEvent(events: taps)
+                expect(viewModel.value.value).to(equal(incrementor.value))
+            }
+        }
+        
+        describe("reset") {
+            it("calls increment on the model layer") {
+                let prevCalls = incrementor.resetCalls
+                let taps = Observable.just(())
+                viewModel.reset = ControlEvent(events: taps)
+                expect(incrementor.resetCalls).to(equal(prevCalls+1))
+            }
+            
+            it("updates relay with model value") {
+                let taps = Observable.just(())
+                viewModel.increment = ControlEvent(events: taps)
                 expect(viewModel.value.value).to(equal(incrementor.value))
             }
         }

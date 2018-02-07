@@ -11,9 +11,24 @@ import Nimble
 @testable import Services
 
 final class ConfigSpec: QuickSpec {
+    private final class MockStore: Storing {
+        var store: [String: Any] = [:]
+        
+        func store<T>(_ value: T, path: [String]) throws {
+            store[path.joined()] = value
+        }
+        
+        func get<T>(path: [String]) throws -> T {
+            return store[path.joined()] as! T
+        }
+        
+        
+    }
+    
     override func spec() {
         describe("config") {
-            var config = StoredConfig.default
+            let store = MockStore()
+            var config = StoredConfig.default(store: store)
             config.step = 10
             config.max = 1000
             
@@ -25,22 +40,17 @@ final class ConfigSpec: QuickSpec {
                 }
             }
             
-            it("reads") {
+            it("reads from the store") {
                 do {
-                    _ = try StoredConfig.assertStored()
+                    let readed = try StoredConfig.stored(store: store)
+                    expect(readed.step).to(equal(10))
+                    expect(readed.max).to(equal(1000))
                 } catch {
                     expect(false).to(beTrue())
                 }
+                
             }
-            
-            describe("readed") {
-                let readed = try! StoredConfig.assertStored()
-                it("has stored values") {
-                    expect(readed.step).to(equal(10))
-                    expect(readed.max).to(equal(1000))
-                }
-            }
-            
+                        
             it("validates values") {
                 config.step = -10
                 do {

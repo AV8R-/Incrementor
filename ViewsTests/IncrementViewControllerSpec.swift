@@ -9,36 +9,70 @@
 import Quick
 import Nimble
 import RxCocoa
+import RxSwift
 import ViewModels
+import UIKit
 @testable import Views
 
 final class IncrementViewControllerSpec: QuickSpec {
     
     final class MockIncrementViewModel: IncrementViewModelling {
+        var increment: ControlEvent<()>? {
+            didSet {
+                _=increment?.bind { [weak self] in
+                    self?.value.accept(Int(arc4random_uniform(20)))
+                    self?.incrementCallsCount += 1
+                }
+            }
+        }
+        
+        var reset: ControlEvent<()>? {
+            didSet {
+                _=reset?.bind { [weak self] in
+                    self?.value.accept(0)
+                    self?.resetCallsCount += 1
+                }
+            }
+        }
         var value: BehaviorRelay<Int> = .init(value: 0)
         
-        var callsCount = 0
-        
-        func increment() {
-            callsCount += 1
-        }
+        var incrementCallsCount = 0
+        var resetCallsCount = 0
     }
     
     override func spec() {
         let viewModel = MockIncrementViewModel()
         let viewController = IncrementViewController(viewModel: viewModel)
         _=viewController.view
-        describe("button") {
+        describe("value button") {
             it("touch triggers increment") {
-                let calls = viewModel.callsCount
-                viewController.button.sendActions(for: .touchUpInside)
-                expect(viewModel.callsCount).to(equal(calls+1))
+                let calls = viewModel.incrementCallsCount
+                viewController.incrementButton.sendActions(for: .touchUpInside)
+                expect(viewModel.incrementCallsCount).to(equal(calls+1))
             }
             
             it("updates button label on value change") {
-                let new = Int(arc4random_uniform(20))
-                viewModel.value.accept(new)
-                expect(viewController.button.titleLabel?.text).to(equal("\(new)"))
+                expect(viewController.incrementButton.titleLabel?.text)
+                    .to(equal("\(viewModel.value.value)"))
+            }
+        }
+        
+        describe("reset button") {
+            it("touch triggers rest on view model") {
+                let calls = viewModel.resetCallsCount
+                let button = viewController.resetButton!
+                UIApplication.shared.sendAction(
+                    button.action!,
+                    to: button.target!,
+                    from: nil,
+                    for: nil
+                )
+                expect(viewModel.resetCallsCount).to(equal(calls+1))
+            }
+            
+            it("updates button label on reset") {
+                expect(viewController.incrementButton.titleLabel?.text)
+                    .to(equal("\(viewModel.value.value)"))
             }
         }
     }

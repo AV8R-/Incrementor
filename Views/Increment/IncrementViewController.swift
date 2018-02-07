@@ -31,6 +31,7 @@ public final class IncrementViewController: UIViewController, IncrementViewContr
         
         let inc = makeIncrementControl()
         view.addSubview(inc)
+        incrementButton = inc
         
         NSLayoutConstraint.activate([
             inc.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -38,12 +39,17 @@ public final class IncrementViewController: UIViewController, IncrementViewContr
         ])
         
         navigationItem.rightBarButtonItem = makeResetButton()
+        resetButton = navigationItem.rightBarButtonItem!
     }
+    
+    // Необходимости UI тестов
+    weak var incrementButton: UIButton!
+    weak var resetButton: UIBarButtonItem!
     
 }
 
 extension IncrementViewController {
-    private func makeIncrementControl() -> UIControl {
+    private func makeIncrementControl() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("0", for: .normal)
